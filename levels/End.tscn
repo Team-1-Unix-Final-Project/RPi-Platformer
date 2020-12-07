@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://End.gd" type="Script" id=1]
+[ext_resource path="res://Assets/PressStart2P-Regular.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0.882353, 1, 1 )
+
+[sub_resource type="DynamicFont" id=3]
+font_data = ExtResource( 2 )
+
+[node name="End" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 352.365
+margin_top = 265.305
+margin_right = 656.365
+margin_bottom = 281.305
+custom_fonts/font = SubResource( 1 )
+text = "Thanks For Playing!"
+
+[node name="Button" type="Button" parent="."]
+margin_left = 466.684
+margin_top = 352.726
+margin_right = 542.684
+margin_bottom = 374.726
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Quit"

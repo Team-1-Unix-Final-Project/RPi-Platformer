@@ -16,12 +16,17 @@ _global_script_class_icons={
 [application]
 
 config/name="RPi Platformer Team 1"
-run/main_scene="res://MainMenu.tscn"
+run/main_scene="res://menus/MainMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 global="*res://global.gd"
+
+[display]
+
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
 
 [input]
 
@@ -75,4 +80,5 @@ menu={
 [rendering]
 
 quality/driver/driver_name="GLES2"
+environment/default_clear_color=Color( 0.0862745, 0.0823529, 0.12549, 1 )
 environment/default_environment="res://default_env.tres"
