@@ -17,10 +17,10 @@ var sprint_dir = 0
 var current_jump_time = 0
 
 var state = "idle"
-var sts = {"idle":"idle","walk":"walking","sprint":"sprinting","jump":"jumping","fall":"falling","wall_jump":"walljumping","slide":"sliding","shoot":"shooting"}
+var sts = {"idle":"idle","walk":"walking","sprint":"sprinting","jump":"jumping","fall":"falling","shoot":"shooting"}
 var sprint = false
 var shot = false
-var shooting = false
+var can_walk = true
 
 #------------------------------ ON INSTANCE -----------------------------------#
 func _ready():
@@ -31,17 +31,20 @@ func _ready():
 #---------------------- FOR EVERY INGAME PROCESS CYCLE ------------------------#
 func _physics_process(_delta):
 	################################ WASD INPUT ################################
+	
 	if Input.is_action_pressed("left"):
 		$AnimatedSprite.scale.x = -1
-		if state == sts.idle && state != sts.walk:
-			set_state(sts.walk)
-		dir.x -= 1
+		if can_walk:
+			if state == sts.idle && state != sts.walk:
+				set_state(sts.walk)
+			dir.x -= 1
 	if Input.is_action_pressed("right"):
 		$AnimatedSprite.scale.x = 1
-		if state == sts.idle && state != sts.walk:
-			set_state(sts.walk)
-		dir.x += 1
-	if !Input.is_action_pressed("left") && !Input.is_action_pressed("right") || Input.is_action_pressed("left") && Input.is_action_pressed("right"):
+		if can_walk:
+			if state == sts.idle && state != sts.walk:
+				set_state(sts.walk)
+			dir.x += 1
+	if !Input.is_action_pressed("left") && !Input.is_action_pressed("right") || Input.is_action_pressed("left") && Input.is_action_pressed("right") || not can_walk && is_on_floor():
 		dir.x = 0
 	if Input.is_action_pressed("down"):
 		#TODO: Sliding stuff 
@@ -85,6 +88,16 @@ func _physics_process(_delta):
 			sprint = true
 		sprint_dir = 0
 	
+	################################ SHOOTING ##################################
+	if Input.is_action_pressed("shoot"):
+		if shot == false:
+			can_walk = false
+			shoot()
+			shot = true
+			yield(get_tree().create_timer(FIRE_RATE),"timeout")
+			can_walk = true
+			shot = false
+	
 	################################ FRICTION AND ACCEL ########################
 	if dir.x == 0:
 		vel.x = lerp(vel.x,0,FRICTION)
@@ -107,35 +120,24 @@ func _physics_process(_delta):
 		vel.y += dir.y * GRAV_ACCEL
 		vel.y = clamp(vel.y, -MAX_GRAV, MAX_GRAV)
 	
-	################################ SHOOTING ##################################
-	if Input.is_action_pressed("shoot"):
-		if shot == false:
-			shoot()
-			shot = true
-			set_state(sts.shoot)
-			yield(get_tree().create_timer(FIRE_RATE),"timeout")
-			shot = false
 	################################ MOVE AND SLIDE ############################
 	vel = move_and_slide(vel,Vector2.UP)
 	
 	################################ STATE CHECKS ##############################
-	if not shot:
-		#Change to idle if on floor and not moving
-		if round(dir.x) == 0 && is_on_floor():
-			sprint = false
-			if state != sts.idle:
-				set_state(sts.idle)
-		#Change to walking if on floor and moving
-		elif round(dir.x) != 0 && is_on_floor():
-			if state != sts.walk && state != sts.sprint:
-				set_state(sts.walk)
-		#Change to falling if not on floor
-		elif !is_on_floor() && state != sts.jump:
-			if state != sts.fall:
-				set_state(sts.fall)
-	else:
-		set_state(sts.shoot)
-	
+	#Change to idle if on floor and not moving
+	if round(dir.x) == 0 && is_on_floor():
+		sprint = false
+		if state != sts.idle:
+			set_state(sts.idle)
+	#Change to walking if on floor and moving
+	elif round(dir.x) != 0 && is_on_floor():
+		if state != sts.walk && state != sts.sprint:
+			set_state(sts.walk)
+	#Change to falling if not on floor
+	elif !is_on_floor() && state != sts.jump:
+		if state != sts.fall:
+			set_state(sts.fall)
+
 	################################ ANIMATIONS ################################
 	play_animation()
 
@@ -155,20 +157,21 @@ func shoot():
 	get_tree().get_root().add_child(instance)
 
 func play_animation():
-	if state == sts.walk:
-		$AnimatedSprite.play("run")
-	elif state == sts.sprint:
-		$AnimatedSprite.play("run")
-	elif state == sts.jump:
-		$AnimatedSprite.play("jump")
-	elif state == sts.fall:
-		$AnimatedSprite.play("fall")
-	elif state == sts.idle:
-		$AnimatedSprite.play("default")
-	elif state == sts.shoot:
+	if shot:
 		$AnimatedSprite.play("shoot")
 	else:
-		$AnimatedSprite.play("default")
+		if state == sts.walk:
+			$AnimatedSprite.play("run")
+		elif state == sts.sprint:
+			$AnimatedSprite.play("run")
+		elif state == sts.jump:
+			$AnimatedSprite.play("jump")
+		elif state == sts.fall:
+			$AnimatedSprite.play("fall")
+		elif state == sts.idle:
+			$AnimatedSprite.play("default")
+		else:
+			$AnimatedSprite.play("default")
 
 #---------------------------- SIGNAL CONNECTIONS ------------------------------#
 func sprint_timer():
