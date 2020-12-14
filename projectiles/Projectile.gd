@@ -4,13 +4,14 @@ var hit_points setget set_hit_points, get_hit_points
 var speed setget set_speed, get_speed
 var default_speed = 450
 var current_speed = default_speed
+var vel = Vector2.ZERO
 
 ####################### FOR EVERY INGAME PROCESS CYCLE #########################
-func _physics_process(delta):
+func _physics_process(_delta):
 	#------------------------------- MOVE AND SLIDE ---------------------------#
 	if scale.x < 0:
 		current_speed *= -1
-	move_and_slide(Vector2(current_speed * speed,0),Vector2.UP)
+	vel = move_and_slide(Vector2(current_speed * speed,0),Vector2.UP)
 	#--------------------------- DESTROY ON COLLIDE ---------------------------#
 	if get_slide_count():
 		for count in get_slide_count():
