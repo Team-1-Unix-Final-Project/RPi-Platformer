@@ -24,11 +24,12 @@ position = Vector2( 511.421, 295.883 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 2 )
 
-[node name="Button" type="Button" parent="."]
-margin_left = 441.39
-margin_top = 302.2
-margin_right = 532.39
-margin_bottom = 322.2
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2( 460.497, 278.811 )
+
+[node name="Button" type="Button" parent="Node2D"]
+margin_right = 91.0
+margin_bottom = 20.0
 custom_styles/hover = SubResource( 1 )
 custom_styles/focus = SubResource( 2 )
 custom_styles/normal = SubResource( 3 )
@@ -37,12 +38,14 @@ custom_colors/font_color = Color( 0.0470588, 0.0588235, 0.0745098, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
 text = "Play"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Button2" type="Button" parent="."]
-margin_left = 441.39
-margin_top = 353.322
-margin_right = 532.39
-margin_bottom = 373.322
+[node name="Button2" type="Button" parent="Node2D"]
+margin_top = 44.5077
+margin_right = 91.0
+margin_bottom = 64.5077
 custom_styles/hover = SubResource( 1 )
 custom_styles/focus = SubResource( 2 )
 custom_styles/normal = SubResource( 3 )
@@ -51,3 +54,6 @@ custom_colors/font_color = Color( 0.0470588, 0.0588235, 0.0745098, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
 text = "Exit"
+__meta__ = {
+"_edit_use_anchors_": false
+}

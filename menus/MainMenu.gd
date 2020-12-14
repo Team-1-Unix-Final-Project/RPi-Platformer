@@ -7,9 +7,9 @@ var gamescene = load("res://levels/Level1.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if $Button.connect("pressed",self,"start"):
+	if $Node2D/Button.connect("pressed",self,"start"):
 		print("Could not connect main menu to start button")
-	if $Button2.connect("pressed",self,"quit"):
+	if $Node2D/Button2.connect("pressed",self,"quit"):
 		print("Could not connect main menu to quit button")
 	pass # Replace with function body.
 

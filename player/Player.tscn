@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://player/Player.gd" type="Script" id=1]
 [ext_resource path="res://Assets/player/idle/0.png" type="Texture" id=2]
@@ -20,6 +20,10 @@
 [ext_resource path="res://Assets/player/run/9.png" type="Texture" id=18]
 [ext_resource path="res://Assets/player/run/10.png" type="Texture" id=19]
 [ext_resource path="res://Assets/player/run/11.png" type="Texture" id=20]
+[ext_resource path="res://Assets/player/shoot/1.png" type="Texture" id=21]
+[ext_resource path="res://Assets/player/shoot/2.png" type="Texture" id=22]
+[ext_resource path="res://Assets/player/shoot/3.png" type="Texture" id=23]
+[ext_resource path="res://Assets/player/shoot/0.png" type="Texture" id=24]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -28,14 +32,19 @@ animations = [ {
 "name": "default",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 5 ), ExtResource( 6 ) ],
+"frames": [ ExtResource( 24 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 23 ) ],
 "loop": false,
-"name": "jump",
-"speed": 3.0
+"name": "shoot",
+"speed": 80.0
 }, {
 "frames": [ ExtResource( 7 ), ExtResource( 8 ) ],
 "loop": false,
 "name": "fall",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 5 ), ExtResource( 6 ) ],
+"loop": false,
+"name": "jump",
 "speed": 3.0
 }, {
 "frames": [ ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 19 ), ExtResource( 20 ) ],
@@ -53,8 +62,12 @@ script = ExtResource( 1 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( -1, 0 )
 frames = SubResource( 1 )
-frame = 12
+animation = "shoot"
+frame = 3
 playing = true
+
+[node name="ShotPosition" type="Position2D" parent="AnimatedSprite"]
+position = Vector2( 24.386, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
