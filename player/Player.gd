@@ -4,8 +4,9 @@ var ACCEL = 20
 var JUMP_TIME = 12
 var JUMP_STRENGTH = 100
 var FRICTION = 0.3
+var SPRINT_MULTIPLIER = 1.5
 var MAX_WALKSPEED = 200
-var MAX_SPRINTSPEED = 400
+var MAX_SPRINTSPEED = MAX_WALKSPEED * SPRINT_MULTIPLIER
 var GRAV_ACCEL = 30
 var MAX_GRAV = 400
 var FIRE_RATE = 0.5
@@ -25,8 +26,7 @@ var shooting = false
 #------------------------------ ON INSTANCE -----------------------------------#
 func _ready():
 	global.player = self
-	if $SprintTimer.connect("timeout",self,"sprint_timer") == 1:
-		print("Error in "+self.name+" scene connecting "+$SprintTimer.name)
+	$FireRateTimer.set_wait_time(FIRE_RATE)
 
 #---------------------- FOR EVERY INGAME PROCESS CYCLE ------------------------#
 func _physics_process(_delta):
@@ -89,19 +89,18 @@ func _physics_process(_delta):
 	################################ SHOOTING ##################################
 	if Input.is_action_pressed("shoot"):
 		shooting = true
-		$ShootTimer.start()
+		$ShootingStateTimer.start()
 		if shot == false:
 			shoot()
 			shot = true
-			yield(get_tree().create_timer(FIRE_RATE),"timeout")
-			shot = false
+			$FireRateTimer.start()
 	
 	################################ FRICTION AND ACCEL ########################
 	if dir.x == 0:
 		vel.x = lerp(vel.x,0,FRICTION)
 	else:
 		if sprint:
-			current_accel = ACCEL * 2
+			current_accel = ACCEL * SPRINT_MULTIPLIER
 		else:
 			current_accel = ACCEL
 		vel.x = dir.x * current_accel
@@ -141,8 +140,6 @@ func _physics_process(_delta):
 
 #------------------------------------ FUNCTIONS -------------------------------#
 func set_state(new_state : String):
-	#print("Stopped "+state+"...")
-	#print("Started "+new_state+"...")
 	state = new_state
 
 func shoot():
@@ -177,11 +174,11 @@ func play_animation():
 			$AnimatedSprite.play("default")
 
 #---------------------------- SIGNAL CONNECTIONS ------------------------------#
-func sprint_timer():
+func _on_SprintTimer_timeout():
 	sprint_dir = 0
-	#print("Timer 0")
 
+func _on_FireRateTimer_timeout():
+	shot = false
 
-
-func _on_ShootTimer_timeout():
+func _on_ShootingStateTimer_timeout():
 	shooting = false
